@@ -29,8 +29,8 @@ final class DataManager {
         if images.count > 0 {
             completion?(images)
         } else {
+            let context = coreDataManager.getContext()
             for image in model {
-                let context = coreDataManager.getContext()
                 let imageObject = coreDataManager.createObject(from: Images.self)
                 imageObject.id = Int64(image.id)
                 imageObject.takenDate = image.earthDate

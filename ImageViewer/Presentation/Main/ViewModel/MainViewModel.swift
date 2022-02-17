@@ -33,9 +33,7 @@ final class MainViewModel {
             switch result {
             case .failure(let error):
                 completion(error)
-                DispatchQueue.main.async {
-                    self.mainView.activityIndicator.stopAnimating()
-                }
+                self.mainView.activityIndicator.stopAnimating()
                 print(error)
             case .success(let images):
                 guard let images = images?.photos else { return }
@@ -51,11 +49,8 @@ final class MainViewModel {
                 self.dataManager.loadData(using: self.images) { savedImages in
                     self.savedImages = savedImages
                 }
-                
-                DispatchQueue.main.async {
-                    self.mainView.activityIndicator.stopAnimating()
-                    self.mainView.imagesCollectionView.reloadData()
-                }
+                self.mainView.activityIndicator.stopAnimating()
+                self.mainView.imagesCollectionView.reloadData()
             }
         }
     }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-// MARK: - Register and dequeueCell for UICollectionViewCell
+// MARK: - Register and dequeueCell for UICollectionView
 
 extension UICollectionView {
     

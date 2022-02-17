@@ -53,10 +53,8 @@ final class MainView: UIView {
     // MARK: - Actions
     
     @objc private func didPullToRefresh(sender: UIRefreshControl) {
-        DispatchQueue.main.async {
-            self.refreshControlPulled?()
-            self.refreshControl.endRefreshing()
-        }
+        self.refreshControlPulled?()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: - Private Methods

@@ -34,8 +34,8 @@ final class MainCell: UICollectionViewCell {
     
     // MARK: - Private Properties
     
-    private var imageCachingService = ImageCachingService()
-    private lazy var activityIndicator = ActivityIndicatorView()
+    private var imageCachingService: ImageCachingService = ImageCachingService()
+    private lazy var activityIndicator: ActivityIndicatorView = ActivityIndicatorView()
     
     private let imageDateLabel: InsetLabel = {
         $0.textAlignment = .left
@@ -77,16 +77,16 @@ final class MainCell: UICollectionViewCell {
     
     // MARK: - Public Methods
     
-    public func configure(with item: Images) {
+    public func configure(with item: Images, for indexPath: IndexPath) {
         guard let url = item.image else { return }
         imageIDLabel.text = "Img ID: \(item.id)"
         imageDateLabel.text = "Taken: \(item.takenDate ?? "none")"
         
         activityIndicator.startAnimating()
         imageView.setupImage(
-            for: imageView,
-               with: imageCachingService,
-               url: url
+            with: imageCachingService,
+            url: url,
+            indexPath: indexPath
         ) { [weak self] in
             guard let self = self else { return }
             self.activityIndicator.stopAnimating()

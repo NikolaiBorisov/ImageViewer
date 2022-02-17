@@ -14,14 +14,14 @@ import UIKit
 extension UIImageView {
     
     func setupImage(
-        for view: UIImageView,
-        with service: ImageCachingService,
+        with service: ImageCachingService?,
         url: String,
+        indexPath: IndexPath,
         completion: @escaping () -> Void
     ) {
         guard let imgURL = URL(string: url) else { return }
-        service.getImageWith(url: imgURL) { image in
-            view.image = image
+        service?.getImageWith(url: imgURL, indexPath: indexPath) { [weak self] image in
+            self?.image = image
             completion()
         }
     }

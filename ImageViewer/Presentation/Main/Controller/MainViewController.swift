@@ -71,7 +71,7 @@ extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: MainCell = collectionView.dequeueCell(for: indexPath)
         let item = viewModel.savedImages[indexPath.row]
-        cell.configure(with: item)
+        cell.configure(with: item, for: indexPath)
         return cell
     }
     
