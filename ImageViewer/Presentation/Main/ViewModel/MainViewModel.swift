@@ -12,7 +12,6 @@ final class MainViewModel {
     
     // MARK: - Public Properties
     
-    public lazy var mainView = MainView()
     public var vcTitle = ""
     public var savedImages = [Images]()
     public let insetForSection = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
@@ -26,14 +25,15 @@ final class MainViewModel {
     
     // MARK: - Public Methods
     
-    public func getImages(completion: @escaping (AppError) -> Void?) {
-        mainView.activityIndicator.startAnimating()
+    public func getImages(
+        completion: @escaping (AppError) -> Void?,
+        callbackReload: @escaping () -> Void?
+    ) {
         dataFetcherService.fetchImages { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
                 completion(error)
-                self.mainView.activityIndicator.stopAnimating()
                 print(error)
             case .success(let images):
                 guard let images = images?.photos else { return }
@@ -45,20 +45,9 @@ final class MainViewModel {
                 }
                 
                 self.images = images
-                
-                self.dataManager.loadData(using: self.images) { savedImages in
-                    self.savedImages = savedImages
-                }
-                self.mainView.activityIndicator.stopAnimating()
-                self.mainView.imagesCollectionView.reloadData()
+                self.dataManager.loadData(using: self.images) { self.savedImages = $0 }
+                callbackReload()
             }
-        }
-    }
-    
-    public func setupRefreshControl(completion: @escaping (AppError) -> Void?) {
-        mainView.refreshControlPulled = { [weak self] in
-            guard let self = self else { return }
-            self.getImages(completion: completion)
         }
     }
     

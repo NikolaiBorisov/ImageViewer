@@ -8,5 +8,5 @@
 import Foundation
 
 enum AppTitle {
-    static let mainVCTitle = "Images"
+    static let mainVCTitle = "Mars Photo"
 }

@@ -13,6 +13,10 @@ final class FullSizeImageViewController: UIViewController {
     
     public var viewModel = FullSizeImageViewModel()
     
+    // MARK: - Private Properties
+    
+    private lazy var mainView = FullSizeImageView()
+    
     // MARK: - Initializers
     
     init(
@@ -34,7 +38,7 @@ final class FullSizeImageViewController: UIViewController {
     
     override func loadView() {
         
-        view = viewModel.mainView
+        view = mainView
     }
     
     override func viewDidLoad() {
@@ -58,11 +62,11 @@ final class FullSizeImageViewController: UIViewController {
     }
     
     private func setupImage() {
-        viewModel.setupFullSizeImage()
+        mainView.fullSizeImageView.image = viewModel.singleImage
     }
     
     private func setupDate() {
-        viewModel.setupDownloadDate()
+        mainView.downloadDateLabel.text = viewModel.showDate
     }
     
 }

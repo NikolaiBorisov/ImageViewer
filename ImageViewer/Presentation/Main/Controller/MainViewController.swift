@@ -13,11 +13,15 @@ final class MainViewController: UIViewController, LoadableErrorAlertController {
     
     public var viewModel = MainViewModel()
     
+    // MARK: - Private Properties
+    
+    private lazy var mainView = MainView()
+    
     // MARK: - Life Cycle
     
     override func loadView() {
         
-        view = viewModel.mainView
+        view = mainView
     }
     
     // MARK: - Life Cycle
@@ -28,7 +32,7 @@ final class MainViewController: UIViewController, LoadableErrorAlertController {
         setupNavBar()
         setupView()
         getImagesHandler()
-        refreshControlHandler()
+        setupRefreshControl()
     }
     
     // MARK: - Private Methods
@@ -38,23 +42,26 @@ final class MainViewController: UIViewController, LoadableErrorAlertController {
     }
     
     private func setupView() {
-        viewModel.mainView.imagesCollectionView.delegate = self
-        viewModel.mainView.imagesCollectionView.dataSource = self
+        mainView.imagesCollectionView.delegate = self
+        mainView.imagesCollectionView.dataSource = self
     }
     
     private func getImagesHandler() {
+        self.mainView.activityIndicator.startAnimating()
         viewModel.getImages { [weak self] error in
             self?.showErrorAlert(with: error, completionReload: {
-                self?.viewModel.getImages(completion: { _ in })
+                self?.viewModel.getImages(completion: { _ in }, callbackReload: {})
+                return self?.mainView.activityIndicator.stopAnimating()
             })
+        } callbackReload: {
+            self.mainView.imagesCollectionView.reloadData()
+            return self.mainView.activityIndicator.stopAnimating()
         }
     }
     
-    private func refreshControlHandler() {
-        viewModel.setupRefreshControl { [weak self] error in
-            self?.showErrorAlert(with: error, completionReload: {
-                self?.viewModel.getImages(completion: { _ in })
-            })
+    public func setupRefreshControl() {
+        mainView.refreshControlPulled = { [weak self] in
+            self?.getImagesHandler()
         }
     }
     
@@ -96,7 +103,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         collectionView.setupTwoItemsPerRow(
-            on: viewModel.mainView.imagesCollectionView,
+            on: mainView.imagesCollectionView,
             with: viewModel.insetForSection
         )
     }
